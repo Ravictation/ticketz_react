@@ -2,6 +2,7 @@ import React from 'react'
 import logo from '../img/Vector.png'
 import search from '../img/search.png'
 import profile from '../img/Ellipse 11.png'
+import {Link} from 'react-router-dom'
 
 
 function Header () {
@@ -9,26 +10,26 @@ function Header () {
         <header className="bg-white">
         <nav className="mx-auto flex max-w-7xl items-center justify-between p-5">
           <div className=" md:flex md:gap-x-12 items-center justify-between">
-            <a href="home.html">
+            <Link to="/">
               <img
                 className="md:h-12 h-10 md:w-auto"
                 src={logo}
                 alt="logo"
               />
-            </a>
+            </Link>
             <div className="hidden lg:flex lg:gap-x-12">
-              <a
-                href="home.html"
+              <Link
+                to="/"
                 className="text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 Home
-              </a>
-              <a
-                href="viewall.html"
+              </Link>
+              <Link
+                to="/movie"
                 className="text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 List Movie
-              </a>
+              </Link>
             </div>
           </div>
           <div className="hidden lg:flex lg:items-center lg:gap-x-12 lg:justify-end  ">
@@ -43,8 +44,8 @@ function Header () {
              
             <summary className=" inline-block cursor-pointer"><img src={profile} alt="" /></summary>
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                <li><a>Profile</a></li>
-                <li><a>Log out</a></li>
+                <li><Link>Profile</Link></li>
+                <li><Link>Log out</Link></li>
             </ul>
             </details>
           </div>
@@ -86,36 +87,36 @@ function Header () {
                   />
                 </li>
                 <li>
-                  <a
-                    href="home.html"
+                  <Link
+                    to="/"
                     className="block w-full text-center py-3 border border-gray text-black font-sans font-bold"
                   >
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="viewall.html"
+                  <Link
+                    to="viewall.html"
                     className="block w-full text-center py-3 border border-gray text-black font-sans font-bold"
                   >
                     List Movie
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="profile.html"
                     className="block w-full text-center py-3 border border-gray text-black font-sans font-bold"
                   >
                     Profile
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="#"
                     className="block w-full text-center py-3 border border-gray text-black font-sans font-bold"
                   >
                     Log out
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <p className="text-center font-sans py-3 border border-gray">

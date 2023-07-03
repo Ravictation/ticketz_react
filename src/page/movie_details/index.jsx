@@ -1,56 +1,14 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Header from '../../component/header'
+import Moviedetails from '../../component/moviebox'
 import Footer from '../../component/footer'
+import {useParams} from 'react-router-dom'
 
-function Moviedetails () {
+function Moviedetail () {
     return (
         <>
         <Header />
-        <main className="flex-col w-full flex lg:flex-row pt-10 gap-x-14 pb-10 items-center justify-center">
-    <div className="w-full mx-auto flex items-center justify-center lg:ml-20 lg:w-1/5">
-      <div className="w-83 h-114 border border-gray-500 rounded-lg flex justify-center items-center">
-        <img src="img/movie1.png" alt="" className="object-cover" />
-      </div>
-    </div>
-    <div className="w-4/5 flex flex-col mr-10 ">
-      <h1 className="font-bold font-sans text-3xl mb-2">
-        Spider-Man:Homecoming
-      </h1>
-      <h3 className="font-sans text-gray-500 mb-8">
-        Adventure, Action, Sci-fi
-      </h3>
-      <div className="flex flex-row w-full flex-wrap gap-y-4">
-        <div className="w-1/2">
-          <p className="font-sans text-gray-500">Release date</p>
-          <p className="font-sans">June 28, 2017</p>
-        </div>
-        <div className="w-1/2">
-          <p className="font-sans text-gray-500">Directed by</p>
-          <p className="font-sans">Jon Watss</p>
-        </div>
-        <div className="w-1/2">
-          <p className="font-sans text-gray-500">Duration</p>
-          <p className="font-sans">2 Hours 13 Minutes</p>
-        </div>
-        <div className="w-1/2">
-          <p className="font-sans text-gray-500">Casts</p>
-          <p className="font-sans">
-            Tom Holland, Michael Keatan, Robert Downey Jr
-          </p>
-        </div>
-      </div>
-      <hr className="w-full my-5" />
-      <h1 className="font-bold font-sans text-2xl mb-2">Synopsis</h1>
-      <p>
-        Thrilled by his experience with the Avengers, Peter returns home, where
-        he lives with his Aunt May, under the watchful eye of his new mentor
-        Tony Stark, Peter tries to fall back into his normal daily routine -
-        distracted by thoughts of proving himself to be more than just your
-        friendly neighborhood Spider-Man - but when the Vulture emerges as a new
-        villain, everything that Peter holds most important will be threatened.{" "}
-      </p>
-    </div>
-  </main>
+       
   {/* SHOWTIMES AND TICKETS SECTIONS */}
   <main className="w-full bg-background flex flex-col justify-center items-center">
     <header className="pt-20">
@@ -234,4 +192,4 @@ function Moviedetails () {
     )
 }
 
-export default Moviedetails
+export default Moviedetail

@@ -1,10 +1,40 @@
-import React from "react";
-import Header from '../../component/header'
-import Footer from '../../component/footer'
-import Cards from '../../component/cards'
-import card1 from '../../img/movie1.png'
+import React, {useEffect, useState} from "react";
+import Header from '../../component/header';
+import Footer from '../../component/footer';
+import Cards from '../../component/cards';
+import card1 from '../../img/movie1.png';
+import axios from 'axios';
 
-function viewall () {
+const dataArr = []
+
+function Viewall () {
+  const [genres, setGenres] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [filter, setFilter] = useState([])
+  
+  const getGenres = async () => {
+    try {
+     const {data} = await axios.get('http://localhost:8000/genre')
+     setGenres(data.data)
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
+  const getMovies = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8000/movie?limit=10&orderBy=title')
+      setMovies(data)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    getGenres()
+    getMovies()
+  }, [])
     return (
         <>
     <Header/>
@@ -14,8 +44,13 @@ function viewall () {
       <div className="flex flex-col md:flex-row justify-between ">
         <h2 className="text-2xl ml-20">List Movie</h2>
         <div className="flex gap-x-12 mr-20 justify-between">
-          <select id="cars" className="bg-grey rounded-lg pr-12 pl-4 py-3">
-            <option value="Sort">Sort</option>
+          <select className="bg-grey rounded-lg pr-12 pl-4 py-3">
+            <option selected disabled>
+              All
+            </option>
+            {genres.map((v)=> {
+                return <option>{v.genre_name}</option>
+              })}
           </select>
           <input
             type="text"
@@ -64,13 +99,9 @@ function viewall () {
       </div>
     </div>
     <div className="movie-container flex flex-row  bg-white flex-wrap gap-y-12 pt-11 gap-x-16 w-6/7 pb-10 w-4/5 pl-10 ">
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
-    <Cards image={card1} name="spiderman" genre="action,comedy"/>
+    {movies.map((v) => {
+      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genre_name}/>
+    })}
     </div>
 
     <div className="button page flex flex-row gap-x-2 mb-12 mt-8 ">
@@ -104,4 +135,4 @@ function viewall () {
     )
 }
 
-export default viewall
+export default Viewall
