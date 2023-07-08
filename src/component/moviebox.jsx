@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-function Moviebox (image, title,genre_name,duration, release_date, director, casts, synopsis) {
+function Moviebox ({image, title,genre_name,duration, release_date, director, casts, synopsis}) {
 
     return(
         
@@ -29,7 +29,7 @@ function Moviebox (image, title,genre_name,duration, release_date, director, cas
         </div>
         <div className="w-1/2">
           <p className="font-sans text-gray-500">Duration</p>
-          <p className="font-sans">{duration}</p>
+          <p className="font-sans">{duration} Minutes</p>
         </div>
         <div className="w-1/2">
           <p className="font-sans text-gray-500">Casts</p>

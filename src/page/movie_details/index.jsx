@@ -1,14 +1,43 @@
 import React, {useState, useEffect} from "react";
 import Header from '../../component/header'
-import Moviedetails from '../../component/moviebox'
+import Moviebox from '../../component/moviebox'
 import Footer from '../../component/footer'
-import {useParams} from 'react-router-dom'
+import { Link, useParams} from 'react-router-dom'
+import axios from "axios";
+import logo from '../../img/sponsor1.png'
 
 function Moviedetail () {
+  const params = useParams()
+
+  const [details, setDetails] = useState([])
+
+  const getMovies = async () => {
+    try {
+        const {data} = await axios.get('http://localhost:8000/movie/' + params.id)
+        setDetails(data.data)
+        console.log(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+useEffect(()=>{
+  getMovies()
+}, [])
     return (
         <>
         <Header />
-       
+       {details.map((v)=> {
+        return <Moviebox 
+        title={v.title} 
+        image={v.movie_banner} 
+        genre_name={v.genre_name} 
+        duration={v.duration} 
+        release_date={v.release_date}
+        director={v.director} 
+        casts={v.casts} 
+        synopsis={v.synopsis} />
+       })}
   {/* SHOWTIMES AND TICKETS SECTIONS */}
   <main className="w-full bg-background flex flex-col justify-center items-center">
     <header className="pt-20">
@@ -27,7 +56,7 @@ function Moviedetail () {
     <div className="flex flex-row flex-wrap ml-40 gap-x-40 gap-y-8 mb-12">
       <div className="flex flex-col h-88 w-95 bg-white justify-center">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>
@@ -53,7 +82,7 @@ function Moviedetail () {
       </div>
       <div className="flex flex-col h-88 w-95 bg-white justify-center">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>
@@ -79,7 +108,7 @@ function Moviedetail () {
       </div>
       <div className="hidden lg:flex flex-col h-88 w-95 bg-white justify-center">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>
@@ -105,7 +134,7 @@ function Moviedetail () {
       </div>
       <div className="hidden lg:flex flex-col h-88 w-95 bg-white justify-center">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>
@@ -131,7 +160,7 @@ function Moviedetail () {
       </div>
       <div className="hidden xl:flex flex-col h-88 w-95 bg-white justify-center">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>
@@ -157,7 +186,7 @@ function Moviedetail () {
       </div>
       <div className=" flex-col h-88 w-95 bg-white justify-center hidden xl:flex">
         <div className="flex-row flex w-full justify-center gap-x-5 mt-6">
-          <img src="img/sponsor1.png" alt="" className=" object-contain" />
+          <img src={logo} alt="" className=" object-contain" />
           <div className="w-1/2">
             <h3>ebv.id</h3>
             <p>whatever street no.12. south purwokerto</p>

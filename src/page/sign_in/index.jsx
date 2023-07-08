@@ -2,6 +2,7 @@ import React from "react";
 import logo from '../../img/Vector.png'
 import banner from '../../img/image 1.png'
 import vector from '../../img/tickitz 1.png'
+import SignInForm from '../../component/signinform'
 
 
 function Signin () {
@@ -31,26 +32,8 @@ function Signin () {
           Sign in with your data that you entered during your registration
         </p>
       </header>
-      <div className="flex flex-col  justify-center mb-8 w-3/4">
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
-          className="border border-gray rounded-lg w-full text-black px-3 py-3 mb-6 "
-          placeholder="Write your email"
-        />
-        <label htmlFor="Password"> Password</label>
-        <input
-          type="password"
-          className="border border-gray rounded-lg w-full text-black px-3 py-3 mb-6 "
-          placeholder="Write your password"
-        />
-        <a
-          href="#"
-          className="text-sm bg-primary inline-block rounded-md border border-transparent px-8 py-3 text-center text-white w-full"
-        >
-          Sign In
-        </a>
-      </div>
+      
+      <SignInForm />
       <footer>
         <p className="font-sans text-center mb-5 text-gray-600 mr-10">
           Forgot your password?

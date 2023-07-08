@@ -1,7 +1,7 @@
 import React from 'react'
 import logo from '../img/Vector.png'
 import search from '../img/search.png'
-import profile from '../img/Ellipse 11.png'
+import avatar from '../img/Ellipse 11.png'
 import {Link} from 'react-router-dom'
 
 
@@ -42,9 +42,9 @@ function Header () {
             </a>
             <details className="dropdown">
              
-            <summary className=" inline-block cursor-pointer"><img src={profile} alt="" /></summary>
+            <summary className=" inline-block cursor-pointer"><img src={avatar} alt="" /></summary>
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                <li><Link>Profile</Link></li>
+                <li><Link to="/profile">Profile</Link></li>
                 <li><Link>Log out</Link></li>
             </ul>
             </details>

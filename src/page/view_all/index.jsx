@@ -24,8 +24,8 @@ function Viewall () {
 
   const getMovies = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/movie?limit=10&orderBy=title')
-      setMovies(data)
+      const { data } = await axios.get('http://localhost:8000/movie?limit=10')
+      setMovies(data.data)
     } catch (error) {
       
     }
@@ -100,7 +100,7 @@ function Viewall () {
     </div>
     <div className="movie-container flex flex-row  bg-white flex-wrap gap-y-12 pt-11 gap-x-16 w-6/7 pb-10 w-4/5 pl-10 ">
     {movies.map((v) => {
-      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genre_name}/>
+      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genre_names}/>
     })}
     </div>
 
