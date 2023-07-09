@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from 'axios'
+import {Container, Show} from '../helpers/toast'
 
 
 
@@ -23,7 +24,10 @@ function UpdateForm({name, date, casts, director, synopsis, image, duration, id}
     function handleSubmit(event){
         event.preventDefault()
         axios.patch('http://localhost:8000/movie', {body})
-        .then(response=>console.log(response))
+        .then(response=>
+            console.log(response),
+            Show('Movie Updated', 'success')
+            )
         .catch(err=>console.log(err))
     }
 
@@ -60,6 +64,7 @@ function UpdateForm({name, date, casts, director, synopsis, image, duration, id}
                         <input
                         className="rounded-lg h-16 border border-gray-200 px-5"
                         type="text"
+                        disabled
                         name="movie_id"
                         required=""
                         onChange={handleInput}

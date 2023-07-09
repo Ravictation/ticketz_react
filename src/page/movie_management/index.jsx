@@ -3,9 +3,34 @@ import Header from '../../component/header'
 import Footer from '../../component/footer'
 import CardsUpdate from '../../component/cardsupdate'
 import axios from "axios";
-
-
+import { Show } from "../../helpers/toast";
+import useApi from "../../helpers/useApi";
+import { Container } from "../../helpers/toast";
 function ManageMovie () {
+  const api = useApi()
+  const [form, setForm] = useState([])
+  const inputChange = (e) => {
+    const data = { ...form }
+    data[e.target.name] = e.target.value
+    setForm(data)
+}
+  const addmovie = () => 
+  api({
+    method : 'POST',
+    url : '/movie',
+    data : form
+  }) 
+  .then(({data})=>{
+    Show('Success Add Movie', 'success')
+  })
+  .catch((err)=>{
+    const axiosErr = err.response.data
+    if (axiosErr.message !== undefined) {
+        Show(axiosErr.message, 'warning')
+    } else if (axiosErr.error !== undefined) {
+        Show(axiosErr.error, 'error')
+    }
+  })
 
   const [manager, setManager] = useState([])
 
@@ -17,19 +42,21 @@ function ManageMovie () {
         console.log(error)
     }
 }
-// eslint-disable-next-line react-hooks/rules-of-hooks
+
 useEffect(()=>{
     getMovies()
 }, [])
     return (
         <>
         <Header />
+        <Container />
         <main className=" mx-auto pt-14 bg-background">
     <h1 className="font-bold w-4/5 mx-auto text-2xl mb-6">Form Movie</h1>
     <div className="bg-white px-10 py-14 w-4/5 mx-auto">
       <div className="flex flex-row w-full">
-        <div className="w-1/4 flex justify-center items-center">
-          <img src="img/movie1.png" alt="" />
+        <div className="w-1/4 flex justify-center items-center flex-col">
+          <h1>Input Movie Banner</h1>
+        <input type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={inputChange} />
         </div>
         <div className="w-3/4 flex flex-row flex-wrap gap-x-14 gap-y-6">
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -40,6 +67,7 @@ useEffect(()=>{
               type="text"
               placeholder="Spider-Man:Homecoming"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -50,6 +78,7 @@ useEffect(()=>{
               type="text"
               placeholder="Action, Adventure, Sci-fi"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -60,6 +89,7 @@ useEffect(()=>{
               type="text"
               placeholder="Jon Watts"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -70,6 +100,7 @@ useEffect(()=>{
               type="text"
               placeholder="Tom Holland, Michael Keaton"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -80,6 +111,7 @@ useEffect(()=>{
               type="text"
               placeholder="07/05/2020"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -90,6 +122,7 @@ useEffect(()=>{
               type="text"
               placeholder="1 Hour 14 Minutes"
               className="px-4 py-3 border border-gray-200 rounded-md"
+              onChange={inputChange}
             />
           </div>
         </div>
@@ -103,13 +136,14 @@ useEffect(()=>{
           placeholder="Thrilled by his experience with the Avengers, Peter returns home, where he
       lives with his Aunt May, | "
           className="w-full h-24 overflow-y-scroll border border-gray-200 rounded-md mt-3"
+          onChange={inputChange}
         />
       </div>
       <div className="flex flex-row place-content-end gap-x-6 mt-10 mb-14">
         <button className="px-14 py-3 border-2 font-sans text-primary font-bold border-primary">
           Reset
         </button>
-        <button className="px-14 py-3 border border-primary font-sans font-bold text-white bg-primary">
+        <button className="px-14 py-3 border border-primary font-sans font-bold text-white bg-primary" onClick={addmovie} >
           Submit
         </button>
       </div>
