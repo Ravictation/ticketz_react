@@ -8,10 +8,8 @@ import { Show } from "../../helpers/toast";
 import {login} from '../../store/reducer/user'
 import {useDispatch, useSelector} from 'react-redux'
 
-
 function Signin () {
   const [form, setForm] = useState ({})
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const api = useApi()
@@ -38,10 +36,11 @@ function Signin () {
         .then(({ data }) => {
           Show('Login success', 'success')
           setTimeout(()=> {
-            navigate('/');
+            navigate('/')
           }, 3050);
           const token = data.token
-          dispatch(login(token))
+          
+          dispatch(login( token))
         })
         .catch((err) => {
             const axiosErr = err.response.data

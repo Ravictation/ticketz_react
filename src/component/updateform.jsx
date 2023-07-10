@@ -12,11 +12,11 @@ function UpdateForm({name, date, casts, director, synopsis, image, duration, id}
         "movie_id": `${id}`,
         "title": `${name}`, 
         // "movie_banner": `${image}`,
-        // "release_date": `${date}`,  
-        // "casts": `${casts}`, 
-        // "director": `${director}`, 
-        "synopsis": `${synopsis}` 
-        // "duration": `${duration}`
+        "release_date": `${date}`,  
+        "casts": `${casts}`, 
+        "director": `${director}`, 
+        "synopsis": `${synopsis}`,
+        "duration": `${duration}`
     })
     const handleInput = (event) => {
         setUpdates({...body, [event.target.name]: event.target.value})
@@ -38,11 +38,13 @@ function UpdateForm({name, date, casts, director, synopsis, image, duration, id}
             <form className="relative flex flex-col gap-y-8 w-full h-full px-16 justify-center">
                 <div className="">
                 <div className="justify-center flex xl:flex-row flex-col gap-x-5">
+                    <div className='flex flex-col'>
                     <img
                     className="w-60 h-auto xl:mx-10 mx-auto"
                     src={image}
-                    alt=""
                     />
+                    <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+                    </div>
                     <div className="flex flex-col gap-y-3">
                     <div className="flex flex-col font-mulish">
                         <label htmlFor="title" className="text-gray-600 py-2">
@@ -104,6 +106,7 @@ function UpdateForm({name, date, casts, director, synopsis, image, duration, id}
                         Genre
                         </label>
                         <input
+                        disabled
                         className="rounded-lg h-16 border border-gray-200 px-5"
                         type="text"
                         // name="genre"

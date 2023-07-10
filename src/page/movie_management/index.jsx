@@ -6,6 +6,8 @@ import axios from "axios";
 import { Show } from "../../helpers/toast";
 import useApi from "../../helpers/useApi";
 import { Container } from "../../helpers/toast";
+
+
 function ManageMovie () {
   const api = useApi()
   const [form, setForm] = useState([])
@@ -33,19 +35,30 @@ function ManageMovie () {
   })
 
   const [manager, setManager] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
 
   const getMovies = async () => {
     try {
-        const {data}= await axios.get('http://localhost:8000/movie?limit=5')
+        const {data}= await axios.get(`http://localhost:8000/movie?limit=5&page=${currentPage}`)
         setManager(data.data)
+        setTotalPages(Math.ceil(data.meta.total / 10));
     } catch (error) {
         console.log(error)
     }
 }
+const goToPrevPage = () => {
+  setCurrentPage((prevPage) => prevPage - 1);
+};
+
+const goToNextPage = () => {
+  setCurrentPage((prevPage) => prevPage + 1);
+};
 
 useEffect(()=>{
     getMovies()
-}, [])
+}, [currentPage])
     return (
         <>
         <Header />
@@ -56,7 +69,7 @@ useEffect(()=>{
       <div className="flex flex-row w-full">
         <div className="w-1/4 flex justify-center items-center flex-col">
           <h1>Input Movie Banner</h1>
-        <input type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={inputChange} />
+        <input type="file" class="file-input file-input-bordered w-full max-w-xs"  />
         </div>
         <div className="w-3/4 flex flex-row flex-wrap gap-x-14 gap-y-6">
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -65,6 +78,7 @@ useEffect(()=>{
             </label>
             <input
               type="text"
+              name="title"
               placeholder="Spider-Man:Homecoming"
               className="px-4 py-3 border border-gray-200 rounded-md"
               onChange={inputChange}
@@ -75,6 +89,7 @@ useEffect(()=>{
               Category
             </label>
             <input
+            disabled
               type="text"
               placeholder="Action, Adventure, Sci-fi"
               className="px-4 py-3 border border-gray-200 rounded-md"
@@ -87,6 +102,7 @@ useEffect(()=>{
             </label>
             <input
               type="text"
+              name="director"
               placeholder="Jon Watts"
               className="px-4 py-3 border border-gray-200 rounded-md"
               onChange={inputChange}
@@ -98,6 +114,7 @@ useEffect(()=>{
             </label>
             <input
               type="text"
+              name="casts"
               placeholder="Tom Holland, Michael Keaton"
               className="px-4 py-3 border border-gray-200 rounded-md"
               onChange={inputChange}
@@ -109,6 +126,7 @@ useEffect(()=>{
             </label>
             <input
               type="text"
+              name="release_date"
               placeholder="07/05/2020"
               className="px-4 py-3 border border-gray-200 rounded-md"
               onChange={inputChange}
@@ -120,6 +138,7 @@ useEffect(()=>{
             </label>
             <input
               type="text"
+              name="duration"
               placeholder="1 Hour 14 Minutes"
               className="px-4 py-3 border border-gray-200 rounded-md"
               onChange={inputChange}
@@ -133,6 +152,7 @@ useEffect(()=>{
         </label>
         <input
           type="text"
+          name="synopsis"
           placeholder="Thrilled by his experience with the Avengers, Peter returns home, where he
       lives with his Aunt May, | "
           className="w-full h-24 overflow-y-scroll border border-gray-200 rounded-md mt-3"
@@ -150,36 +170,42 @@ useEffect(()=>{
     </div>
   </main>
   <main className="bg-background flex items-center flex-col">
-    <header className="flex flex-row justify-between w-4/5 mx-auto">
+    <header className="flex flex-row justify-between w-4/5 mx-auto mt-20">
       <h1 className="font-bold font-sans  text-2xl mb-6">Data Movie</h1>
-      <div>
-        <select name="" id="">
-          <option value="Sort">SORT</option>
+      <div className="flex flex-row gap-x-10 w-1/2 justify-end">
+        <select class="select select-bordered w-1/4 max-w-xs">
+          <option disabled selected>All</option>
         </select>
-        <input type="text" placeholder="Search Movie Name..." />
+        <input type="text" placeholder="Search Movie Name" class="input input-bordered w-3/4 max-w-xs" />
       </div>
     </header>
     <div className="bg-white w-4/5 mx-auto flex flex-row">
     {manager.map((v)=>{
-                return <CardsUpdate name={v.title} image={v.movie_banner} genre={v.genre_name} id={v.movie_id}/>
+                return <CardsUpdate name={v.title} image={v.movie_banner} genre={v.genres} id={v.movie_id}/>
             })}
     </div>
     <div className="flex flex-row gap-x-2 mt-5 mb-11">
-      <button className="px-4 py-2 border border-gray-200 rounded-lg bg-white font-sans">
-        1
-      </button>
-      <button className="px-4 py-2 border border-gray-200 rounded-lg bg-white font-sans">
-        2
-      </button>
-      <button className="px-4 py-2 border border-gray-200 rounded-lg bg-white font-sans">
-        3
-      </button>
-      <button className="px-4 py-2 border border-gray-200 rounded-lg bg-white font-sans">
-        4
-      </button>
-      <button className="px-4 py-2 border border-gray-200 rounded-lg bg-white font-sans">
-        5
-      </button>
+    <div className="button page flex flex-row gap-x-2 mb-12 mt-8">
+      {currentPage > 1 && (
+        <a
+          href="#"
+          onClick={goToPrevPage}
+          className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
+        >
+          Prev
+        </a>
+      )}
+      {currentPage < totalPages && (
+        <a
+          href="#"
+          onClick={goToNextPage}
+          className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
+        >
+          Next
+        </a>
+      )}
+    </div>
+
     </div>
   </main>
   <Footer />

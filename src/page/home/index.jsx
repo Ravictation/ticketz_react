@@ -3,10 +3,44 @@ import Header from '../../component/header'
 import Footer from '../../component/footer'
 import hero from '../../img/Group 14.png'
 import card1 from '../../img/movie1.png'
-import card2 from '../../img/movie2.png'
-import card3 from '../../img/movie3.png'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+import Cards from '../../component/cards'
+import useApi from '../../helpers/useApi'
+import { useSelector } from 'react-redux/es/hooks/useSelector'
 
 function Home () {
+  const [movies, setMovies] = useState([]);
+  const api = useApi()
+  const { isAuth } = useSelector((s) => s.users)
+
+
+  const getMovies = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8000/movie?limit=7')
+      setMovies(data.data)
+    } catch (error) {
+      
+    }
+  }
+  
+  const fetchUser = async () => {
+    try {
+        const { data } = await api.get('/users')
+        console.log(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+  useEffect(() => {
+    
+    if (isAuth) {
+      fetchUser()
+    }
+    getMovies()
+  }, [isAuth])
+
     return (
         <>
         
@@ -169,78 +203,9 @@ function Home () {
       </button>
     </div>
     <div className="flex flex-row gap-x-6 w-full mb-32 pl-32 overflow-x-auto ">
-      <div className="w-56 h-113 border border-gray  flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
-      <div className="w-56 h-113 border border-gray flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
-      <div className="w-56 h-113 border border-gray flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
-      <div className="w-56 h-113 border border-gray flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
-      <div className="w-56 h-113 border border-gray flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
-      <div className="w-56 h-113 border border-gray flex flex-col justify-center items-center">
-        <img src={card1} alt="" className="mb-6" />
-        <h1 className="font-bold font-sans mb-2">Black Widow</h1>
-        <p className="font-sans mb-12 text-sm">Action, Adventure, Sci-fi</p>
-        <a
-          href=""
-          className=" text-sm  inline-block rounded-md border border-primary px-10 py-2 text-center text-primary hover:bg-primary hover:text-white"
-        >
-          {" "}
-          Details
-        </a>
-      </div>
+    {movies.map((v) => {
+      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genres}/>
+    })}
     </div>
   </main>
   {/* Email Section */}

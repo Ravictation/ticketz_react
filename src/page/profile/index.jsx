@@ -1,9 +1,56 @@
 import React from "react";
 import Header from '../../component/header'
 import Footer from '../../component/footer'
+import { logout } from "../../store/reducer/user";
+import { useDispatch } from "react-redux";
+import { useSelector} from 'react-redux'
+import { useNavigate } from "react-router-dom";
+import { Show } from "../../helpers/toast";
+import { useEffect } from "react";
+import useApi from "../../helpers/useApi";
+import { useState } from "react";
+import Logo from '../../img/Ellipse 11.png'
 
 
 function Profile () {
+  const [form, setForm] = useState({})
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const api = useApi()
+
+  const inputChange = (e) => {
+    const data = { ...form }
+    data[e.target.name] = e.target.value
+    setForm(data)
+}
+    const updatedata = () =>
+    api({
+      method : 'PATCH',
+      url : '/users',
+      data : form
+    }) 
+    .then(({data})=>{
+      Show('Registrasi Berhasil', 'success');
+      setTimeout(()=> {
+        navigate('/signin')
+      }, 3050)
+    })
+    .catch((err)=>{
+      const axiosErr = err.response.data
+      if (axiosErr.message !== undefined) {
+          Show(axiosErr.message, 'warning')
+      } else if (axiosErr.error !== undefined) {
+          Show(axiosErr.error, 'error')
+      }
+    })
+
+  const {isAuth} = useSelector ((s) => s.users)
+  useEffect(() => {
+    if (!isAuth) {
+      navigate ('/')
+      Show('You need to Log In to access this page', 'error')
+    }
+  }, [isAuth])
     return (
         <>
         <Header />
@@ -12,7 +59,7 @@ function Profile () {
       <h3 className="font-medium text-gray-700 mx-10 my-10">INFO</h3>
       <div className="profile flex flex-col items-center justify-center">
         <img
-          src="/img/Ellipse 11.png"
+          src={Logo}
           alt="profil"
           className="w-40 h-40 object-contain"
         />
@@ -22,6 +69,7 @@ function Profile () {
         <a
           href=""
           className="inline-block px-20 md:px-10 lg:px-20 py-2 border border-black rounded-lg bg-primary text-white"
+          onClick={() => dispatch(logout())}
         >
           Logout
         </a>
@@ -50,24 +98,27 @@ function Profile () {
         <div className="border-b-2 border-horizontal w-5/6 ml-8" />
         <div className="form-card flex flex-col md:flex-row flex-wrap ml-8 mt-12 mr-8 pb-16">
           <div className="form w-full md:w-1/2">
-            <p className="mb-3">First Name</p>
+            <p className="mb-3">Username</p>
             <input
+            
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6 "
               placeholder="Jonas"
             />
           </div>
           <div className="form w-full md:w-1/2">
-            <p className="mb-3">Last Name</p>
+            <p className="mb-3">Full Name</p>
             <input
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
               placeholder="El Rodriguez"
+              onChange={inputChange}
             />
           </div>
           <div className="form w-full md:w-1/2">
             <p className="mb-3">E-mail</p>
             <input
+             onChange={inputChange}
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
               placeholder="Jonasrodrigu123@gmail.com"
@@ -76,6 +127,7 @@ function Profile () {
           <div className="form w-full md:w-1/2">
             <p className="mb-3">Phone Number</p>
             <input
+             onChange={inputChange}
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
               placeholder="+62 81445687121"
@@ -84,8 +136,8 @@ function Profile () {
         </div>
       </div>
       <a
-        href=""
         className="w-1/2 box-border bg-primary rounded-full text-center text-white py-4"
+        onClick={updatedata}
       >
         Update Changes
       </a>
@@ -95,6 +147,7 @@ function Profile () {
           <div className="w-full  md:w-1/2 ml-8">
             <h3>New Password</h3>
             <input
+             onChange={inputChange}
               className="border border-gray rounded-lg w-3/4 px-3 py-3"
               type="password"
               placeholder="Write Your Password"
@@ -103,6 +156,7 @@ function Profile () {
           <div className="w-full md:w-1/2 ml-8 ">
             <h3>Confirm Password</h3>
             <input
+             onChange={inputChange}
               className="border border-gray rounded-lg w-3/4 px-3 py-3"
               type="password"
               placeholder="Confirm Your Password"
@@ -111,8 +165,8 @@ function Profile () {
         </div>
       </div>
       <a
-        href=""
         className="w-1/2 box-border bg-primary rounded-full text-center text-white py-4"
+        onClick={updatedata}
       >
         Update Changes
       </a>

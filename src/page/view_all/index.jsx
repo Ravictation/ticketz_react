@@ -2,15 +2,28 @@ import React, {useEffect, useState} from "react";
 import Header from '../../component/header';
 import Footer from '../../component/footer';
 import Cards from '../../component/cards';
-import card1 from '../../img/movie1.png';
 import axios from 'axios';
+import { useSelector} from 'react-redux'
+import { useNavigate } from "react-router-dom";
+import { Show } from "../../helpers/toast";
 
-const dataArr = []
 
 function Viewall () {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [filter, setFilter] = useState([])
+  const [filter, setFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  // const [query, searchQuery] = useState([])
+  const navigate = useNavigate()
+
+  const {isAuth} = useSelector ((s) => s.users)
+  useEffect(() => {
+    if (!isAuth) {
+      navigate ('/')
+      Show('You need to Log In to access this page', 'error')
+    }
+  }, [isAuth])
   
   const getGenres = async () => {
     try {
@@ -24,17 +37,35 @@ function Viewall () {
 
   const getMovies = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8000/movie?limit=10')
+      const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=${currentPage}&genre=${filter}`)
       setMovies(data.data)
+      setTotalPages(Math.ceil(data.meta.total / 10))
     } catch (error) {
       
     }
   }
+  const goToPrevPage = () => {
+    setCurrentPage((prevPage)=> prevPage-1)
+  }
 
+  const goToNextPage = () => {
+    setCurrentPage((prevPage)=> prevPage+1)
+  }
   useEffect(() => {
     getGenres()
-    getMovies()
   }, [])
+
+  useEffect(() => {
+    getMovies()
+  },[filter, currentPage])
+
+  const changeFilter = (v) => {
+    if (v.targe.value !== 'All') {
+      setFilter(v.target.value)
+    } else {
+      setFilter ('')
+    }
+  } 
     return (
         <>
     <Header/>
@@ -44,8 +75,8 @@ function Viewall () {
       <div className="flex flex-col md:flex-row justify-between ">
         <h2 className="text-2xl ml-20">List Movie</h2>
         <div className="flex gap-x-12 mr-20 justify-between">
-          <select className="bg-grey rounded-lg pr-12 pl-4 py-3">
-            <option selected disabled>
+          <select onChange={changeFilter} className="bg-grey rounded-lg pr-12 pl-4 py-3">
+            <option selected >
               All
             </option>
             {genres.map((v)=> {
@@ -100,33 +131,30 @@ function Viewall () {
     </div>
     <div className="movie-container flex flex-row  bg-white flex-wrap gap-y-12 pt-11 gap-x-16 w-6/7 pb-10 w-4/5 pl-10 ">
     {movies.map((v) => {
-      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genre_names}/>
+      return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genres}/>
     })}
     </div>
 
-    <div className="button page flex flex-row gap-x-2 mb-12 mt-8 ">
-      <a href="" className="px-3 py-3 bg-primary rounded-lg text-white ">
-        1
-      </a>
-      <a
-        href=""
-        className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
-      >
-        2
-      </a>
-      <a
-        href=""
-        className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
-      >
-        3
-      </a>
-      <a
-        href=""
-        className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
-      >
-        4
-      </a>
-    </div>
+    <div className="button page flex flex-row gap-x-2 mb-12 mt-8">
+  {currentPage > 1 && (
+    <a
+      href="#"
+      onClick={goToPrevPage}
+      className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
+    >
+      Prev
+    </a>
+  )}
+  {currentPage < totalPages && (
+    <a
+      href="#"
+      onClick={goToNextPage}
+      className="px-3 py-3 bg-white rounded-lg text-primary hover:bg-primary hover:text-white"
+    >
+      Next
+    </a>
+  )}
+</div>
    
   </main>
 

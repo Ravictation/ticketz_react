@@ -7,6 +7,7 @@ import facebook from '../img/fb.png'
 import instagram from '../img/instagram.png'
 import twitter from '../img/twitter.png'
 import youtube from '../img/youtube.png'
+import { Link } from 'react-router-dom'
 
 function Footer () {
     return (
@@ -23,10 +24,10 @@ function Footer () {
       <div className="flex flex-col">
         <h3 className="font-medium  md:mb-8 mb-3">Explore</h3>
         <div className="flex-row flex mb-10 md:flex-col">
-          <a href="" className="mb-4">
+          <Link to="/" className="mb-4">
             Home
-          </a>
-          <a href="">List Movie</a>
+          </Link>
+          <Link to="/movie">List Movie</Link>
         </div>
       </div>
       <div>
