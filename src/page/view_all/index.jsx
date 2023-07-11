@@ -60,7 +60,7 @@ function Viewall () {
   },[filter, currentPage])
 
   const changeFilter = (v) => {
-    if (v.targe.value !== 'All') {
+    if (v.target.value !== 'All') {
       setFilter(v.target.value)
     } else {
       setFilter ('')
@@ -130,9 +130,11 @@ function Viewall () {
       </div>
     </div>
     <div className="movie-container flex flex-row  bg-white flex-wrap gap-y-12 pt-11 gap-x-16 w-6/7 pb-10 w-4/5 pl-10 ">
-    {movies.map((v) => {
+    {movies ? (
+      movies.map((v) => {
       return <Cards id={v.movie_id} image={v.movie_banner} name={v.title} genre={v.genres}/>
-    })}
+    })):
+    (<h1>Data Not Found</h1>)}
     </div>
 
     <div className="button page flex flex-row gap-x-2 mb-12 mt-8">

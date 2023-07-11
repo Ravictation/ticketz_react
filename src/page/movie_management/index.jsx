@@ -69,7 +69,7 @@ useEffect(()=>{
       <div className="flex flex-row w-full">
         <div className="w-1/4 flex justify-center items-center flex-col">
           <h1>Input Movie Banner</h1>
-        <input type="file" class="file-input file-input-bordered w-full max-w-xs"  />
+        <input name="movie_banner" type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={inputChange}  />
         </div>
         <div className="w-3/4 flex flex-row flex-wrap gap-x-14 gap-y-6">
           <div className="flex flex-col gap-y-3 w-1/3">

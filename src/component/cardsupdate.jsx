@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
-
+import { Show } from '../helpers/toast'
 
 function CardsUpdate ({name, image, genre, id}) {
     const navigate = useNavigate()
@@ -9,6 +9,7 @@ function CardsUpdate ({name, image, genre, id}) {
     const deleteData = async(movie_id) => {
         try {
             await axios.delete(`http://localhost:8000/movie/${movie_id}`);
+            Show('Movie Deleted', 'success')
         } catch (error) {
             console.log(error)
         }
