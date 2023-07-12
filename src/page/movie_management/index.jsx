@@ -11,28 +11,67 @@ import { Container } from "../../helpers/toast";
 function ManageMovie () {
   const api = useApi()
   const [form, setForm] = useState([])
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
   const inputChange = (e) => {
     const data = { ...form }
     data[e.target.name] = e.target.value
     setForm(data)
 }
-  const addmovie = () => 
+const addmovie = () => {
+  const formData = new FormData();
+  formData.append('movie_banner', selectedFile);
+  formData.append('title', form.title);
+  formData.append('director', form.director);
+  formData.append('casts', form.casts);
+  formData.append('release_date', form.release_date);
+  formData.append('duration', form.duration);
+  formData.append('synopsis', form.synopsis);
+  
+  // Tambahkan data lain yang diperlukan ke formData
+
   api({
-    method : 'POST',
-    url : '/movie',
-    data : form
-  }) 
-  .then(({data})=>{
-    Show('Success Add Movie', 'success')
+    method: 'POST',
+    url: '/movie',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   })
-  .catch((err)=>{
-    const axiosErr = err.response.data
-    if (axiosErr.message !== undefined) {
-        Show(axiosErr.message, 'warning')
-    } else if (axiosErr.error !== undefined) {
-        Show(axiosErr.error, 'error')
-    }
-  })
+    .then(({ data }) => {
+      Show('Success Add Movie', 'success');
+    })
+    .catch((err) => {
+      const axiosErr = err.response.data;
+      if (axiosErr.message !== undefined) {
+        Show(axiosErr.message, 'warning');
+      } else if (axiosErr.error !== undefined) {
+        Show(axiosErr.error, 'error');
+      }
+    });
+};
+
+  // const addmovie = () => 
+  // api({
+  //   method : 'POST',
+  //   url : '/movie',
+  //   data : form
+  // }) 
+  // .then(({data})=>{
+  //   Show('Success Add Movie', 'success')
+  // })
+  // .catch((err)=>{
+  //   const axiosErr = err.response.data
+  //   if (axiosErr.message !== undefined) {
+  //       Show(axiosErr.message, 'warning')
+  //   } else if (axiosErr.error !== undefined) {
+  //       Show(axiosErr.error, 'error')
+  //   }
+  // })
 
   const [manager, setManager] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,7 +108,7 @@ useEffect(()=>{
       <div className="flex flex-row w-full">
         <div className="w-1/4 flex justify-center items-center flex-col">
           <h1>Input Movie Banner</h1>
-        <input name="movie_banner" type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={inputChange}  />
+        <input name="movie_banner" type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange}  />
         </div>
         <div className="w-3/4 flex flex-row flex-wrap gap-x-14 gap-y-6">
           <div className="flex flex-col gap-y-3 w-1/3">

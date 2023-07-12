@@ -8,7 +8,7 @@ import { logout } from '../store/reducer/user'
 
 function Header () {
   const dispatch = useDispatch()
-  const {isAuth} = useSelector ((s) => s.users)
+  const {isAuth, data} = useSelector ((s) => s.users)
   // const isAuth = false
     return (
         <header className="bg-white">
@@ -21,7 +21,19 @@ function Header () {
                 alt="logo"
               />
             </Link>
-            <div className="hidden lg:flex lg:gap-x-12">
+            { data[0] && data[0].role == 'admin' ? (
+                            <>
+                                <Link className="hidden lg:flex text-base font-sans " to="/">Dashboard</Link>
+                                <Link className="hidden lg:flex pl-7 text-base font-sans " to="/admin">Manage Movie</Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link className="hidden lg:flex  text-base font-sans " to="/">Home</Link>
+                                <Link className="hidden lg:flex pl-7  text-base font-sans " to="/movie">List
+                                    Movie</Link>
+                            </>
+                        )}
+            {/* <div className="hidden lg:flex lg:gap-x-12">
               <Link
                 to="/"
                 className="text-sm font-medium text-gray-700 hover:text-gray-900"
@@ -34,7 +46,7 @@ function Header () {
               >
                 List Movie
               </Link>
-            </div>
+            </div> */}
           </div>
           {isAuth ? (
             <div className="hidden lg:flex lg:items-center lg:gap-x-12 lg:justify-end  ">

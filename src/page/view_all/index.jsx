@@ -12,6 +12,7 @@ function Viewall () {
   const [genres, setGenres] = useState([]);
   const [movies, setMovies] = useState([]);
   const [filter, setFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   // const [query, searchQuery] = useState([])
@@ -37,7 +38,7 @@ function Viewall () {
 
   const getMovies = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=${currentPage}&genre=${filter}`)
+      const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=${currentPage}&genre=${filter}&search=${searchQuery}`)
       setMovies(data.data)
       setTotalPages(Math.ceil(data.meta.total / 10))
     } catch (error) {
@@ -57,7 +58,11 @@ function Viewall () {
 
   useEffect(() => {
     getMovies()
-  },[filter, currentPage])
+  },[filter, currentPage,searchQuery])
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   const changeFilter = (v) => {
     if (v.target.value !== 'All') {
@@ -84,6 +89,8 @@ function Viewall () {
               })}
           </select>
           <input
+          value={searchQuery}
+          onChange={handleSearchChange}
             type="text"
             className="bg-grey rounded-lg px-4 py-3"
             placeholder="Search Movie Name ..."

@@ -8,12 +8,14 @@ import { useState, useEffect } from 'react'
 import Cards from '../../component/cards'
 import useApi from '../../helpers/useApi'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
+import { useDispatch } from 'react-redux'
+import { addData } from '../../store/reducer/user'
 
 function Home () {
   const [movies, setMovies] = useState([]);
   const api = useApi()
   const { isAuth } = useSelector((s) => s.users)
-
+  const dispatch = useDispatch()
 
   const getMovies = async () => {
     try {
@@ -27,6 +29,7 @@ function Home () {
   const fetchUser = async () => {
     try {
         const { data } = await api.get('/users')
+        dispatch(addData(data.data))
         console.log(data)
     } catch (error) {
         console.log(error)
