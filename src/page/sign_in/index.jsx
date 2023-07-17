@@ -40,7 +40,7 @@ function Signin () {
           }, 3050);
           const token = data.token
           
-          dispatch(login( token))
+          dispatch(login(token))
         })
         .catch((err) => {
             const axiosErr = err.response.data

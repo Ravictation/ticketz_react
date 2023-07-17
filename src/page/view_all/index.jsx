@@ -15,6 +15,21 @@ function Viewall () {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const [month, setMonth] = useState([
+    { 'id': 1, 'name': 'January' },
+    { 'id': 2, 'name': 'February' },
+    { 'id': 3, 'name': 'March' },
+    { 'id': 4, 'name': 'April' },
+    { 'id': 5, 'name': 'May' },
+    { 'id': 6, 'name': 'June' },
+    { 'id': 7, 'name': 'July' },
+    { 'id': 8, 'name': 'Augustus' },
+    { 'id': 9, 'name': 'September' },
+    { 'id': 10, 'name': 'October' },
+    { 'id': 11, 'name': 'November' },
+    { 'id': 12, 'name': 'December' },
+]);
+const [monthQuery, setMonthQuery] = useState('')
   // const [query, searchQuery] = useState([])
   const navigate = useNavigate()
 
@@ -38,7 +53,7 @@ function Viewall () {
 
   const getMovies = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=${currentPage}&genre=${filter}&search=${searchQuery}`)
+      const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=${currentPage}&genre=${filter}&search=${searchQuery}&releaseMonth=${monthQuery}`)
       setMovies(data.data)
       setTotalPages(Math.ceil(data.meta.total / 10))
     } catch (error) {
@@ -58,7 +73,7 @@ function Viewall () {
 
   useEffect(() => {
     getMovies()
-  },[filter, currentPage,searchQuery])
+  },[monthQuery, filter, currentPage,searchQuery])
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -99,42 +114,21 @@ function Viewall () {
       </div>
     </header>
     <div className="months flex flex-row gap-x-4 overflow-x-auto pb-8 w-full pl-20">
-      <div className="months-button  box-border px-10 h-10 w-32 text-sm text-center rounded border border-primary bg-primary text-white hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        September
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Oktober
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        November
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Desember
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Januari
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Februari
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Maret
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        April
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Mei
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Juni
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Juli
-      </div>
-      <div className="months-button  box-border px-10  h-10 w-32 text-sm text-center rounded border border-primary text-primary hover:bg-primary hover:text-white cursor-pointer active:bg-primary flex items-center font-sans font-bold justify-center">
-        Agustus
-      </div>
+    {
+                            month ? (
+                                month.map((v) => {
+                                    return (
+                                        <div key={v.id} className="mr-8">
+                                            <button onClick={() => (setMonth == v.id ? setMonthQuery('') : setMonthQuery(v.id))} 
+                                            className={(monthQuery == v.id ? 'bg-primary text-white' : 'text-primary') + 
+                                            "hover:bg-primary h-8 w-32 rounded border border-primary p-2 text-sm font-semibold active:bg-primary hover:text-white"}>{v.name}</button>
+                                        </div>
+                                    )
+                                })
+                            ) : (
+                                <h1>Data not found</h1>
+                            )
+                        }
     </div>
     <div className="movie-container flex flex-row  bg-white flex-wrap gap-y-12 pt-11 gap-x-16 w-6/7 pb-10 w-4/5 pl-10 ">
     {movies ? (

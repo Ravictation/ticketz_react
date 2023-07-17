@@ -8,10 +8,7 @@ import { useParams } from 'react-router-dom'
 
 
 function Update() {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const params = useParams()
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [update, setUpdate] = useState([])
 
     const getMovies = async () => {
@@ -23,7 +20,6 @@ function Update() {
         }
     }
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(()=>{
         getMovies()
     }, [])

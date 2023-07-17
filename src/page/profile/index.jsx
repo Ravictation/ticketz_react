@@ -4,15 +4,17 @@ import Footer from '../../component/footer'
 import { logout } from "../../store/reducer/user";
 import { useDispatch } from "react-redux";
 import { useSelector} from 'react-redux'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Show } from "../../helpers/toast";
 import { useEffect } from "react";
 import useApi from "../../helpers/useApi";
 import { useState } from "react";
 import Logo from '../../img/Ellipse 11.png'
-
+import axios from "axios";
 
 function Profile () {
+ 
+  
   const [form, setForm] = useState({})
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -30,7 +32,7 @@ function Profile () {
       data : form
     }) 
     .then(({data})=>{
-      Show('Registrasi Berhasil', 'success');
+      Show('Data Updated', 'success');
       setTimeout(()=> {
         navigate('/signin')
       }, 3050)
@@ -43,6 +45,38 @@ function Profile () {
           Show(axiosErr.error, 'error')
       }
     })
+
+  const updatePassword = () =>
+  api({
+    method : 'PATCH',
+    url : '/users/password',
+    headers: {
+      'Content-Type': 'application/json', // Set the Content-Type header
+    },
+    data: JSON.stringify(form),
+  })
+  .then (({data}) =>
+  Show ('password updated','success')
+  )
+  .catch ((err) => {
+    const axiosErr = err.response.data
+    if (axiosErr.message !== undefined) {
+        Show(axiosErr.message, 'warning')
+    } else if (axiosErr.error !== undefined) {
+        Show(axiosErr.error, 'error')
+    }
+  })
+  const getUser = async () => {
+    try {
+        const {data} = await axios.get('http://localhost:8000/users')
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+useEffect(()=>{
+  getUser()
+}, [])
 
   const {isAuth} = useSelector ((s) => s.users)
   useEffect(() => {
@@ -83,12 +117,12 @@ function Profile () {
         >
           Account Settings
         </a>
-        <a
-          href="order_history.html"
+        <Link
+          to="order_history.html"
           className="text-gray-300  py-5 hover:border-b-2 hover:border-primary hover:text-black delay-150"
         >
           Order History
-        </a>
+        </Link>
       </div>
       <h1 className="font-sans font-bold text-xl mt-8 md:hidden">
         Account Settings
@@ -100,7 +134,9 @@ function Profile () {
           <div className="form w-full md:w-1/2">
             <p className="mb-3">Username</p>
             <input
-            
+              onChange={inputChange}
+              name="username"
+              disabled
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6 "
               placeholder="Jonas"
@@ -110,6 +146,7 @@ function Profile () {
             <p className="mb-3">Full Name</p>
             <input
               type="text"
+              name="full_name"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
               placeholder="El Rodriguez"
               onChange={inputChange}
@@ -119,6 +156,7 @@ function Profile () {
             <p className="mb-3">E-mail</p>
             <input
              onChange={inputChange}
+             name="email"
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
               placeholder="Jonasrodrigu123@gmail.com"
@@ -127,6 +165,7 @@ function Profile () {
           <div className="form w-full md:w-1/2">
             <p className="mb-3">Phone Number</p>
             <input
+            name="phone"
              onChange={inputChange}
               type="text"
               className="border border-gray rounded-lg w-3/4 text-black px-3 py-3 mb-6"
@@ -135,41 +174,47 @@ function Profile () {
           </div>
         </div>
       </div>
-      <a
+      <button
         className="w-1/2 box-border bg-primary rounded-full text-center text-white py-4"
         onClick={updatedata}
       >
         Update Changes
-      </a>
+      </button>
       <div className="box-border w-full bg-white pb-16 rounded-lg">
         <h3 className="mt-10 ml-8 mb-10">Account and Privacy</h3>
         <div className="flex flex-col md:flex-row gap-y-6 gap-x-8">
           <div className="w-full  md:w-1/2 ml-8">
             <h3>New Password</h3>
             <input
-             onChange={inputChange}
-              className="border border-gray rounded-lg w-3/4 px-3 py-3"
-              type="password"
-              placeholder="Write Your Password"
+            name="password"
+            className="border border-gray rounded-lg w-3/4 px-3 py-3"
+            type="password"
+            placeholder="Write Your New Password"
+            value={form.password || ""}
+            onChange={inputChange}
             />
+
           </div>
           <div className="w-full md:w-1/2 ml-8 ">
             <h3>Confirm Password</h3>
             <input
-             onChange={inputChange}
-              className="border border-gray rounded-lg w-3/4 px-3 py-3"
-              type="password"
-              placeholder="Confirm Your Password"
+               name="confirmPassword"
+               className="border border-gray rounded-lg w-3/4 px-3 py-3"
+               type="password"
+               placeholder="Confirm Your New Password"
+               value={form.confirmPassword || ""}
+               onChange={inputChange}
             />
+           
           </div>
         </div>
       </div>
-      <a
+      <button
         className="w-1/2 box-border bg-primary rounded-full text-center text-white py-4"
-        onClick={updatedata}
+        onClick={updatePassword}
       >
         Update Changes
-      </a>
+      </button>
     </div>
   </main>
   <Footer />

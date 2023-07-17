@@ -6,13 +6,21 @@ import axios from "axios";
 import { Show } from "../../helpers/toast";
 import useApi from "../../helpers/useApi";
 import { Container } from "../../helpers/toast";
-
-
+import Select from 'react-select';
 function ManageMovie () {
+
   const api = useApi()
   const [form, setForm] = useState([])
   const [selectedFile, setSelectedFile] = useState(null);
+  const [genres, setGenres] = useState([]);
+  // const [selectedGenre, setSelectedGenre] = useState('');
+  const genreChange = (values) => setSelectGenre(values)
 
+  const [selectGenre, setSelectGenre] = useState([])
+  const arr = selectGenre.map(v=> v.genre_id)
+  // const handleGenreChange = (selected) => {
+  //   setSelectedGenre(selected.value);
+  // };
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
@@ -31,8 +39,11 @@ const addmovie = () => {
   formData.append('release_date', form.release_date);
   formData.append('duration', form.duration);
   formData.append('synopsis', form.synopsis);
-  
-  // Tambahkan data lain yang diperlukan ke formData
+  // formData.append("genre_id", selectedGenre);
+  for (var i = 0; i < arr.length; i++) {
+            formData.append('genre_id[]', arr[i]);
+          }
+
 
   api({
     method: 'POST',
@@ -55,49 +66,56 @@ const addmovie = () => {
     });
 };
 
-  // const addmovie = () => 
-  // api({
-  //   method : 'POST',
-  //   url : '/movie',
-  //   data : form
-  // }) 
-  // .then(({data})=>{
-  //   Show('Success Add Movie', 'success')
-  // })
-  // .catch((err)=>{
-  //   const axiosErr = err.response.data
-  //   if (axiosErr.message !== undefined) {
-  //       Show(axiosErr.message, 'warning')
-  //   } else if (axiosErr.error !== undefined) {
-  //       Show(axiosErr.error, 'error')
-  //   }
-  // })
-
   const [manager, setManager] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [filter, setFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const getGenres = async () => {
+    try {
+     const {data} = await axios.get('http://localhost:8000/genre')
+     setGenres(data.data)
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
 
 
   const getMovies = async () => {
     try {
-        const {data}= await axios.get(`http://localhost:8000/movie?limit=5&page=${currentPage}`)
+        const {data}= await axios.get(`http://localhost:8000/movie?limit=5&page=${currentPage}&genre=${filter}&search=${searchQuery}`)
         setManager(data.data)
         setTotalPages(Math.ceil(data.meta.total / 10));
     } catch (error) {
         console.log(error)
     }
 }
-const goToPrevPage = () => {
-  setCurrentPage((prevPage) => prevPage - 1);
-};
+  const goToPrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
 
-const goToNextPage = () => {
-  setCurrentPage((prevPage) => prevPage + 1);
-};
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
-useEffect(()=>{
-    getMovies()
-}, [currentPage])
+  const changeFilter = (v) => {
+    if (v.target.value !== 'All') {
+      setFilter(v.target.value)
+    } else {
+      setFilter ('')
+    }
+  }
+  useEffect(() => {
+    getGenres()
+  }, []) 
+  useEffect(()=>{
+      getMovies()
+  }, [currentPage, filter, searchQuery])
     return (
         <>
         <Header />
@@ -109,6 +127,7 @@ useEffect(()=>{
         <div className="w-1/4 flex justify-center items-center flex-col">
           <h1>Input Movie Banner</h1>
         <input name="movie_banner" type="file" class="file-input file-input-bordered w-full max-w-xs" onChange={handleFileChange}  />
+        <img src={selectedFile} />
         </div>
         <div className="w-3/4 flex flex-row flex-wrap gap-x-14 gap-y-6">
           <div className="flex flex-col gap-y-3 w-1/3">
@@ -125,16 +144,22 @@ useEffect(()=>{
           </div>
           <div className="flex flex-col gap-y-3 w-1/3">
             <label htmlFor="Movie" className="font-sans">
-              Category
+              Genre
             </label>
-            <input
-            disabled
-              type="text"
-              placeholder="Action, Adventure, Sci-fi"
-              className="px-4 py-3 border border-gray-200 rounded-md"
-              onChange={inputChange}
-            />
-          </div>
+        
+            <div className="flex flex-col font-mulish">
+                        <Select 
+                            type="text"
+
+                            name='genre_id'
+                            onChange={genreChange}
+                            options = {genres.map(e => ({ label: e.genre_name, value: e.genre_id, genre_id: e.genre_id }))}
+                            isMulti
+                        />
+                    </div>
+
+            
+          </div>  
           <div className="flex flex-col gap-y-3 w-1/3">
             <label htmlFor="Movie" className="font-sans">
               Director
@@ -211,17 +236,29 @@ useEffect(()=>{
   <main className="bg-background flex items-center flex-col">
     <header className="flex flex-row justify-between w-4/5 mx-auto mt-20">
       <h1 className="font-bold font-sans  text-2xl mb-6">Data Movie</h1>
-      <div className="flex flex-row gap-x-10 w-1/2 justify-end">
-        <select class="select select-bordered w-1/4 max-w-xs">
-          <option disabled selected>All</option>
-        </select>
-        <input type="text" placeholder="Search Movie Name" class="input input-bordered w-3/4 max-w-xs" />
-      </div>
+      <div className="flex gap-x-12 mr-20 justify-between">
+          <select onChange={changeFilter} className="bg-grey rounded-lg pr-12 pl-4 py-3">
+            <option selected >
+              All
+            </option>
+            {genres.map((v)=> {
+                return <option>{v.genre_name}</option>
+              })}
+          </select>
+          <input
+          value={searchQuery}
+          onChange={handleSearchChange}
+            type="text"
+            className="bg-grey rounded-lg px-4 py-3"
+            placeholder="Search Movie Name ..."
+          />
+        </div>
     </header>
     <div className="bg-white w-4/5 mx-auto flex flex-row">
-    {manager.map((v)=>{
+    {manager ? (
+      manager.map((v)=>{
                 return <CardsUpdate name={v.title} image={v.movie_banner} genre={v.genres} id={v.movie_id}/>
-            })}
+            })): (<h1 className="text-center text-2xl text-bold">Data not found</h1>)}
     </div>
     <div className="flex flex-row gap-x-2 mt-5 mb-11">
     <div className="button page flex flex-row gap-x-2 mb-12 mt-8">
